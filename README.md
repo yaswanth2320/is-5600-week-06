@@ -2,13 +2,16 @@
 
 ## Overview
 
-In this lab we are going to take the UI (User Interface) from our previous labs and build it in React. We will be using the same data from the previous labs, and will not be connecting the React app to our Node app quite yet. This lab will focus on building out pagination using the `useState` and `useEffect` hooks, and adding a single page view to the application. You'll make register some existing components, and build out some new components to complete the application. Finally, on your own, you will add the ability to search or filter the products by tags. This lab will be a great opportunity to practice your React skills, and to get comfortable with the React ecosystem.
+In this lab, we are going to take the UI (User Interface) from our previous labs and build it in React. We will be using the same data from the previous labs, and will not be connecting the React app to our Node app quite yet. This lab will focus on building out pagination using the `useState` and `useEffect` hooks, and adding a single page view to the application. You'll make register some existing components, and build out some new components to complete the application. Finally, on your own, you will add the ability to search or filter the products by tags. This lab will be a great opportunity to practice your React skills, and to get comfortable with the React ecosystem.
 
 ## Instructions
 
 1. To begin, inspect your `src` directory. This is where the majority of your application code will exist. For this lab we will be building a React application, so the main file types we will work with will be the `*.jsx` files. These files are essentially the same as the `*.js` files we have been working with, but they are used to denote that the file contains JSX code. JSX is a syntax extension to JavaScript that allows us to write HTML-like code in our JavaScript files. This is a very powerful feature of React, and we will be using it extensively in this lab. Take a moment to familiarize yourself with the `App.jsx` and the `index.jsx` files. The `App.jsx` file is the main component of our application, and the `index.jsx` file is the entry point for our application.
+
 2. Next, inspect the `public` directory. This is where our static assets will live. Static assets are files that do not change, such as images, fonts, and stylesheets. In this lab we will be using the `index.html` file as our entry point for our application. This is where we will be linking our `bundle.js` file, which is the compiled version of our React application. We will also be linking our `style.css` file, which contains the styles for our application.
+
 3. Let's begin. First, let's boot up the application. Run your Replit lab and view the application in the browser. You should see a blank page with the text "Hello There!" in the center of the page.
+
 4. Review the `src` directory, you will see a directory called `components`. This is where we will be building our application; this directory holds all of the components that will make up our application. You'll see we have a `Header.jsx` component already defined. Let's include that in our `App.jsx`:
 
 ```jsx
@@ -29,6 +32,7 @@ export default App;
 ```
 
 Visit your application in the browser. You should see the header component rendered on the page.
+
 5. Next, let's add the Products to our page. We will create a new component called `CardsList.jsx` in the `components` directory. This component will be responsible for rendering the list of products. You will see that a `Card.jsx` component already exists. This component will be responsible for rendering a single product. So we will want to configure the `CardsList.jsx` component to render a list of `Card.jsx` components and pass the relevant data to each component.
 
 ```jsx
@@ -129,42 +133,39 @@ If you visit your application in the browser, you should see the "Next" and "Pre
 // CardList.jsx
 // Import the useState and useEffect hook
 import React, { useState, useEffect } from "react";
+```
 
+```jsx
+// CardList.jsx
+// define the limit state variable and set it to 10
+const limit = 25;
+// Define the default dataset, using slice to get the first 10 products
+const defaultDataset = data.slice(0, limit);
 
-const CardList = ({data}) => {
-  
-  // define the limit state variable and set it to 10
-  const limit = 25;
-  // Define the default dataset, using slice to get the first 10 products
-  const defaultDataset = data.slice(0, limit);
+// Define the offset state variable and set it to 0
+const [offset, setOffset] = useState(0);
+// Define the products state variable and set it to the default dataset
+const [products, setProducts] = useState(defaultDataset);
 
-  // Define the offset state variable and set it to 0
-  const [offset, setOffset] = useState(0);
-  // Define the products state variable and set it to the default dataset
-  const [products, setProducts] = useState(defaultDataset);
-
-  // Define the handlePrevious function
-  const handlePrevious = () => {
-    // set the offset to the previous 10 products
-    setOffset(offset - 10);
-  }
-
-  // Define the handleNext function
-  const handleNext = () => {
-    // set the offset to the next 10 products
-    setOffset(offset + 10);
-  }
-
-  // Define the useEffect hook
-  // This hook will run every time the offset or limit state variables change
-  // It will update the products state variable to the next 10 products
-  useEffect(() => {
-    // set the products state variable to the next 10 products
-    setProducts(data.slice(offset, offset + limit));
-  }, [offset, limit, data]);
-  
-  // ...
+// Define the handlePrevious function
+const handlePrevious = () => {
+  // set the offset to the previous 10 products
+  setOffset(offset - 10);
 }
+
+// Define the handleNext function
+const handleNext = () => {
+  // set the offset to the next 10 products
+  setOffset(offset + 10);
+}
+
+// Define the useEffect hook
+// This hook will run every time the offset or limit state variables change
+// It will update the products state variable to the next 10 products
+useEffect(() => {
+  // set the products state variable to the next 10 products
+  setProducts(data.slice(offset, offset + limit));
+}, [offset, limit, data]);
 ```
 
 There is a lot to unpack here. Essentially, we are using the `useState` hook to create two state variables, `offset` and `products`. We are also using the `useEffect` hook to update the `products` state variable when the `offset` state variable changes. This is a very common pattern when working with React. You can read more about it here: <https://reactjs.org/docs/hooks-effect.html>. By using the `useState` variables, we are able to store the value of the offset and the subset of products in the component and pass them to child components. The `handleNExt` and `handlePrevious` functions are responsible for updating the `offset` state variable. This will trigger the `useEffect` hook and update the `products` state variable. This will cause the `CardList` component to re-render and display the next 10 products.
@@ -212,20 +213,22 @@ Great job! If you open the application in your browser window now, you should be
 ## Your Task
 
 1. Add the ability to filter by tags. A `Search` component already exists. This component is configured to receive a `handleSearch` prop. This prop will be registered to the `onChange` event handler of the component. This means that when the user types in the search input, the `handleSearch` function will be called. The `handleSearch` function will receive the value of the input as an argument. You can use this value to filter the products by tags. You will need to complete the following:
-  a. Import the `Search` component into the `CardList` component and place it above the cards themselves.
-  b. Create a `filterTags` function in the `CardList`. This function should receive a string and filter the `data` prop by tags. Remember how we did this in Lab 4. We had to use the `filter` method and on each product we had to check if the `tags` array included the search term. You can use the same logic here.
-  c. After you've filtered the products in the `filterTags`, you'll need to update the `offset` and the `products` state variables. The `useEffect` hook will listen to the change and re-render the component with the new products.
-  d. Lastly, pass the `filterTags` function to your `Search` component as the `handleSearch` prop.
+   a. Import the `Search` component into the `CardList` component and place it above the cards themselves.
+   b. Create a `filterTags` function in the `CardList`. This function should receive a string and filter the `data` prop by tags. Remember how we did this in Lab 4. We had to use the `filter` method and on each product we had to check if the `tags` array included the search term. You can use the same logic here.
+   c. After you've filtered the products in the `filterTags`, you'll need to update the `offset` and the `products` state variables. The `useEffect` hook will listen to the change and re-render the component with the new products.
+   d. Lastly, pass the `filterTags` function to your `Search` component as the `handleSearch` prop.
 
-## Extra Credit
+2. Optimize the pagination functionality:
+   a. Refactor the `handlePrevious` and `handleNext` functions into a single function that takes a parameter. Update how the handler is passed to the `Button` component accordingly.
+   b. Add logic to disable the `Next` button when the user reaches the end of the products list.
 
-1. Currently the `handlePrevious` and `handleNext` functions are pretty similar, the only difference is the offset value. Can you refactor them into a single function that takes a parameter? You'll need to update how the handler is passed to the `Button` component as well.
-2. If the user gets to the end of the products, the `Next` button should be disabled. Can you add this functionality?
-3. You've added the ability to filter by tags, however the app only allows for a single tag to be searched at a time. Can you add the ability to search for multiple tags? For example, if I search for `red` and `blue`, I should see all products that are tagged with `red` and `blue`. You can use the `includes` method to check if the `tags` array includes all of the search terms. You can read more about the `includes` method here: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes>
+3. Enhance the tag filtering functionality:
+   a. Implement the ability to search for multiple tags simultaneously. For example, if a user searches for "red" and "blue", the results should show all products tagged with both "red" and "blue".
+   b. Use the `includes` method to check if the `tags` array contains all search terms.
 
 ## Guidance and Testing
 
-- We are using Tachyons for styling. You can find the documentation here: <https://tachyons.io/docs/> This is a minimal CSS framework that we will be using throughout the course. It is very easy to use and will help you focus on the core concepts of the course.
+- We are using Tachyons for styling. You can find the documentation here: <https://tachyons.io/docs/>. This is a minimal CSS framework that we will be using throughout the course. It is very easy to use and will help you focus on the core concepts of the course.
 
 ## Submission
 
@@ -242,7 +245,7 @@ Forking a repository means making a copy of it under your GitHub account. This a
 1. **Open the Repository**: Start by navigating to the GitHub repository link provided by your instructor.
 2. **Click "Fork"**: In the top-right corner, find the “Fork” button and click it.
 3. **Select Your Account**: Choose your GitHub account as the destination for the fork. Once done, you’ll be redirected to your forked copy of the repository.
-   
+
    > **Tip**: Make sure you’re logged into your GitHub account, or you won’t see the option to fork!
 
 ## Step 2: Open the Repository in Codespaces
@@ -283,7 +286,6 @@ Once you’ve completed the assignment, it’s time to submit your work. You’l
    - Click "Create pull request" to submit your work for review. Your instructor will be notified and can review your work.
 
 And that’s it! You’ve now completed your first lab assignment using GitHub and Codespaces. Well done!
-
 
 ### Additional Steps
 
