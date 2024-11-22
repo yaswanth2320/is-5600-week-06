@@ -138,7 +138,7 @@ import React, { useState, useEffect } from "react";
 ```jsx
 // CardList.jsx
 // define the limit state variable and set it to 10
-const limit = 25;
+const limit = 10;
 // Define the default dataset, using slice to get the first 10 products
 const defaultDataset = data.slice(0, limit);
 
@@ -221,10 +221,6 @@ Great job! If you open the application in your browser window now, you should be
 2. Optimize the pagination functionality:
    a. Refactor the `handlePrevious` and `handleNext` functions into a single function that takes a parameter. Update how the handler is passed to the `Button` component accordingly.
    b. Add logic to disable the `Next` button when the user reaches the end of the products list.
-
-3. Enhance the tag filtering functionality:
-   a. Implement the ability to search for multiple tags simultaneously. For example, if a user searches for "red" and "blue", the results should show all products tagged with both "red" and "blue".
-   b. Use the `includes` method to check if the `tags` array contains all search terms.
 
 ## Guidance and Testing
 
